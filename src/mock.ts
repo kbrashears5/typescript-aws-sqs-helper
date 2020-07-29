@@ -20,6 +20,11 @@ export class SQSMock extends BaseMock {
     public DeleteMessageBatchResult: AWS.SQS.DeleteMessageBatchResult = { Failed: [], Successful: [] };
 
     /**
+     * Mocks an AWS.SQS.DeleteMessageBatchResult response
+     */
+    public GetQueueAttributesResult: AWS.SQS.GetQueueAttributesResult = { Attributes: { ApproximateNumberOfMessages: '5' } };
+
+    /**
      * Mocks an AWS.SQS.PurgeQueueResult response
      * Technically doesn't exist
      */
@@ -64,6 +69,14 @@ export class SQSMock extends BaseMock {
                         Promise.resolve<AWS.SQS.DeleteMessageBatchResult>(this.DeleteMessageBatchResult);
                 }),
             },
+            // get queue attributes response
+            getQueueAttributes: {
+                promise: jest.fn().mockImplementation(() => {
+                    return returnError ?
+                        Promise.reject(rejectResponse) :
+                        Promise.resolve<AWS.SQS.GetQueueAttributesResult>(this.GetQueueAttributesResult);
+                }),
+            },
             // purge queue response
             purgeQueue: {
                 promise: jest.fn().mockImplementation(() => {
@@ -103,6 +116,7 @@ export class SQSMock extends BaseMock {
         functions = {
             deleteMessage: () => awsResponses.deleteMessage,
             deleteMessageBatch: () => awsResponses.deleteMessageBatch,
+            getQueueAttributes: () => awsResponses.getQueueAttributes,
             purgeQueue: () => awsResponses.purgeQueue,
             receiveMessage: () => awsResponses.receiveMessage,
             sendMessage: () => awsResponses.sendMessage,

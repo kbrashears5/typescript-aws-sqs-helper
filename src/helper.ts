@@ -93,6 +93,35 @@ export class SQSHelper extends BaseClass implements ISQSHelper {
     }
 
     /**
+     * Get how many messages are on a given queue
+     * @param queueUrl {string} Queue to query
+     */
+    public async GetNumberOfMessagesOnQueueAsync(queueUrl: string) : Promise<number> {
+
+        const action = `${SQSHelper.name}.${this.GetNumberOfMessagesOnQueueAsync.name}`;
+        this.LogHelper.LogInputs(action, { queueUrl });
+
+        // guard clauses
+        if (this.ObjectOperations.IsNullOrWhitespace(queueUrl)) { throw new Error(`[${action}]-Must supply queueUrl`); }
+
+        const params: AWS.SQS.GetQueueAttributesRequest = {
+            QueueUrl: queueUrl,
+            AttributeNames: ['ApproximateNumberOfMessages'],
+        };
+        this.LogHelper.LogRequest(action, params);
+
+        const response = await this.Repository.getQueueAttributes(params).promise();
+        this.LogHelper.LogResponse(action, response);
+
+        let messages = '';
+        if (response && response.Attributes) {
+            messages = response.Attributes['ApproximateNumberOfMessages'];
+        }
+
+        return parseInt(messages, 10);
+    }
+
+    /**
      * Purge all message from a queue
      * @param queueUrl {string} Queue to purge all messages from
      */
@@ -157,6 +186,28 @@ export class SQSHelper extends BaseClass implements ISQSHelper {
         this.LogHelper.LogResponse(action, response);
 
         return response;
+    }
+
+    /**
+     * Receive all messages currently on a queue
+     * @param queueUrl {string} Queue to receive message from
+     * @param visibilityTimeout {number} Time in seconds that a message is hidden from the queue. Default is 10
+     * @param attributeNames {string[]} List of attribute names that need to be returned for each message. Default is 'ALL'
+     * @param messageAttributeNames {string[]} List of message attributes to be returned for each message
+     */
+    public async ReceiveAllMessagesAsync(queueUrl: string,
+        visibilityTimeout?: number,
+        attributeNames?: string[],
+        messageAttributeNames?: string[]): Promise<AWS.SQS.Message[]> {
+
+        let allMessages: AWS.SQS.Message[] = [];
+        while (true) {
+            const messages = await this.ReceiveAllMessagesAsync(queueUrl, visibilityTimeout, attributeNames, messageAttributeNames);
+            if (messages.length < 1) { break; }
+            allMessages = allMessages.concat(messages);
+        }
+
+        return allMessages;
     }
 
     /**

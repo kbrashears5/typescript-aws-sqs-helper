@@ -5,11 +5,9 @@ import { SQSHelper } from './helper';
 
 const logger = new Logger(LogLevel.Off);
 const mockerResolves = new SQSMock(false);
-const sqsHelperMockResolves = new SQSHelper(logger,
-    mockerResolves.Mock);
+const sqsHelperMockResolves = new SQSHelper(logger, mockerResolves.Mock);
 const mockerRejects = new SQSMock(true);
-const sqsHelperMockRejects = new SQSHelper(logger,
-    mockerRejects.Mock);
+const sqsHelperMockRejects = new SQSHelper(logger, mockerRejects.Mock);
 const TestValues = new TestingValues();
 
 /**
@@ -20,23 +18,19 @@ describe(`${SQSHelper.name}.${sqsHelperMockResolves.DeleteMessageAsync.name}`, (
     const action = `${SQSHelper.name}.${sqsHelperMockResolves.DeleteMessageAsync.name}`;
 
     test(`${TestValues.ThrowsOnEmpty} queueUrl`, () => {
-        const actual = sqsHelperMockResolves.DeleteMessageAsync(TestValues.EmptyString,
-            TestValues.ReceiptHandle);
+        const actual = sqsHelperMockResolves.DeleteMessageAsync(TestValues.EmptyString, TestValues.ReceiptHandle);
         return expect(actual).rejects.toThrow(`[${action}]-${TestValues.MustSupply} queueUrl`);
     });
     test(`${TestValues.ThrowsOnEmpty} receiptHandle`, () => {
-        const actual = sqsHelperMockResolves.DeleteMessageAsync(TestValues.Url,
-            TestValues.EmptyString);
+        const actual = sqsHelperMockResolves.DeleteMessageAsync(TestValues.Url, TestValues.EmptyString);
         return expect(actual).rejects.toThrow(`[${action}]-${TestValues.MustSupply} receiptHandle`);
     });
     test(TestValues.InvalidTest, () => {
-        const actual = sqsHelperMockRejects.DeleteMessageAsync(TestValues.Url,
-            TestValues.ReceiptHandle);
+        const actual = sqsHelperMockRejects.DeleteMessageAsync(TestValues.Url, TestValues.ReceiptHandle);
         return expect(actual).rejects.toThrow(TestValues.AWSError);
     });
     test(TestValues.ValidTest, () => {
-        const actual = sqsHelperMockResolves.DeleteMessageAsync(TestValues.Url,
-            TestValues.ReceiptHandle);
+        const actual = sqsHelperMockResolves.DeleteMessageAsync(TestValues.Url, TestValues.ReceiptHandle);
         return expect(actual).resolves.toEqual(mockerResolves.DeleteMessageOutput);
     });
 });
@@ -49,29 +43,45 @@ describe(`${SQSHelper.name}.${sqsHelperMockResolves.DeleteMessagesAsync.name}`, 
     const action = `${SQSHelper.name}.${sqsHelperMockResolves.DeleteMessagesAsync.name}`;
 
     test(`${TestValues.ThrowsOnEmpty} queueUrl`, () => {
-        const actual = sqsHelperMockResolves.DeleteMessagesAsync(TestValues.EmptyString,
-            [TestValues.ReceiptHandle]);
+        const actual = sqsHelperMockResolves.DeleteMessagesAsync(TestValues.EmptyString, [TestValues.ReceiptHandle]);
         return expect(actual).rejects.toThrow(`[${action}]-${TestValues.MustSupply} queueUrl`);
     });
     test(`${TestValues.ThrowsOnEmpty} receiptHandles`, () => {
-        const actual = sqsHelperMockResolves.DeleteMessagesAsync(TestValues.Url,
-            TestValues.EmptyArray);
+        const actual = sqsHelperMockResolves.DeleteMessagesAsync(TestValues.Url, TestValues.EmptyArray);
         return expect(actual).rejects.toThrow(`[${action}]-${TestValues.MustSupply} at least one receiptHandle`);
     });
     test(`${TestValues.ThrowsOnTooMany} receiptHandles`, () => {
-        const actual = sqsHelperMockResolves.DeleteMessagesAsync(TestValues.Url,
-            [TestValues.StringValue, TestValues.StringValue, TestValues.StringValue, TestValues.StringValue, TestValues.StringValue, TestValues.StringValue, TestValues.StringValue, TestValues.StringValue, TestValues.StringValue, TestValues.StringValue, TestValues.StringValue]);
+        const actual = sqsHelperMockResolves.DeleteMessagesAsync(TestValues.Url, [TestValues.StringValue, TestValues.StringValue, TestValues.StringValue, TestValues.StringValue, TestValues.StringValue, TestValues.StringValue, TestValues.StringValue, TestValues.StringValue, TestValues.StringValue, TestValues.StringValue, TestValues.StringValue]);
         return expect(actual).rejects.toThrow(`[${action}]-Can only supply up to 10 receiptHandles`);
     });
     test(TestValues.InvalidTest, () => {
-        const actual = sqsHelperMockRejects.DeleteMessagesAsync(TestValues.Url,
-            [TestValues.ReceiptHandle]);
+        const actual = sqsHelperMockRejects.DeleteMessagesAsync(TestValues.Url, [TestValues.ReceiptHandle]);
         return expect(actual).rejects.toThrow(TestValues.AWSError);
     });
     test(TestValues.ValidTest, () => {
-        const actual = sqsHelperMockResolves.DeleteMessagesAsync(TestValues.Url,
-            [TestValues.ReceiptHandle]);
+        const actual = sqsHelperMockResolves.DeleteMessagesAsync(TestValues.Url, [TestValues.ReceiptHandle]);
         return expect(actual).resolves.toEqual(mockerResolves.DeleteMessageBatchResult);
+    });
+});
+
+/**
+ * Test the GetNumberOfMessagesOnQueueAsync method
+ */
+describe(`${SQSHelper.name}.${sqsHelperMockResolves.GetNumberOfMessagesOnQueueAsync.name}`, () => {
+    // set action for this method
+    const action = `${SQSHelper.name}.${sqsHelperMockResolves.GetNumberOfMessagesOnQueueAsync.name}`;
+
+    test(`${TestValues.ThrowsOnEmpty} queueUrl`, () => {
+        const actual = sqsHelperMockResolves.GetNumberOfMessagesOnQueueAsync(TestValues.EmptyString);
+        return expect(actual).rejects.toThrow(`[${action}]-${TestValues.MustSupply} queueUrl`);
+    });
+    test(TestValues.InvalidTest, () => {
+        const actual = sqsHelperMockRejects.GetNumberOfMessagesOnQueueAsync(TestValues.Url);
+        return expect(actual).rejects.toThrow(TestValues.AWSError);
+    });
+    test(TestValues.ValidTest, () => {
+        const actual = sqsHelperMockResolves.GetNumberOfMessagesOnQueueAsync(TestValues.Url);
+        return expect(actual).resolves.toBe(5);
     });
 });
 
@@ -125,23 +135,19 @@ describe(`${SQSHelper.name}.${sqsHelperMockResolves.SendMessageAsync.name}`, () 
     const action = `${SQSHelper.name}.${sqsHelperMockResolves.SendMessageAsync.name}`;
 
     test(`${TestValues.ThrowsOnEmpty} queueUrl`, () => {
-        const actual = sqsHelperMockResolves.SendMessageAsync(TestValues.EmptyString,
-            TestValues.Body);
+        const actual = sqsHelperMockResolves.SendMessageAsync(TestValues.EmptyString, TestValues.Body);
         return expect(actual).rejects.toThrow(`[${action}]-${TestValues.MustSupply} queueUrl`);
     });
     test(`${TestValues.ThrowsOnEmpty} messageBody`, () => {
-        const actual = sqsHelperMockResolves.SendMessageAsync(TestValues.Url,
-            TestValues.EmptyString);
+        const actual = sqsHelperMockResolves.SendMessageAsync(TestValues.Url, TestValues.EmptyString);
         return expect(actual).rejects.toThrow(`[${action}]-${TestValues.MustSupply} messageBody`);
     });
     test(TestValues.InvalidTest, () => {
-        const actual = sqsHelperMockRejects.SendMessageAsync(TestValues.Url,
-            TestValues.Body);
+        const actual = sqsHelperMockRejects.SendMessageAsync(TestValues.Url, TestValues.Body);
         return expect(actual).rejects.toThrow(TestValues.AWSError);
     });
     test(TestValues.ValidTest, () => {
-        const actual = sqsHelperMockResolves.SendMessageAsync(TestValues.Url,
-            TestValues.Body);
+        const actual = sqsHelperMockResolves.SendMessageAsync(TestValues.Url, TestValues.Body);
         return expect(actual).resolves.toEqual(mockerResolves.SendMessageResult);
     });
 });
@@ -154,23 +160,19 @@ describe(`${SQSHelper.name}.${sqsHelperMockResolves.SendMessagesAsync.name}`, ()
     const action = `${SQSHelper.name}.${sqsHelperMockResolves.SendMessagesAsync.name}`;
 
     test(`${TestValues.ThrowsOnEmpty} queueUrl`, () => {
-        const actual = sqsHelperMockResolves.SendMessagesAsync(TestValues.EmptyString,
-            TestValues.Entries);
+        const actual = sqsHelperMockResolves.SendMessagesAsync(TestValues.EmptyString, TestValues.Entries);
         return expect(actual).rejects.toThrow(`[${action}]-${TestValues.MustSupply} queueUrl`);
     });
     test(`${TestValues.ThrowsOnEmpty} entries`, () => {
-        const actual = sqsHelperMockResolves.SendMessagesAsync(TestValues.Url,
-            TestValues.EmptyArray);
+        const actual = sqsHelperMockResolves.SendMessagesAsync(TestValues.Url, TestValues.EmptyArray);
         return expect(actual).rejects.toThrow(`[${action}]-${TestValues.MustSupply} at least one entry`);
     });
     test(TestValues.InvalidTest, () => {
-        const actual = sqsHelperMockRejects.SendMessagesAsync(TestValues.Url,
-            TestValues.Entries);
+        const actual = sqsHelperMockRejects.SendMessagesAsync(TestValues.Url, TestValues.Entries);
         return expect(actual).rejects.toThrow(TestValues.AWSError);
     });
     test(TestValues.ValidTest, () => {
-        const actual = sqsHelperMockResolves.SendMessagesAsync(TestValues.Url,
-            TestValues.Entries);
+        const actual = sqsHelperMockResolves.SendMessagesAsync(TestValues.Url, TestValues.Entries);
         return expect(actual).resolves.toEqual(mockerResolves.SendMessageBatchResult);
     });
 });

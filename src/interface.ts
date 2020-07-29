@@ -27,6 +27,12 @@ export interface ISQSHelper {
         receiptHandles: string[]): Promise<AWS.SQS.DeleteMessageBatchResult>;
 
     /**
+     * Get how many messages are on a given queue
+     * @param queueUrl {string} Queue to query
+     */
+    GetNumberOfMessagesOnQueueAsync(queueUrl: string) : Promise<number>;
+
+    /**
      * Purge all message from a queue
      * @param queueUrl {string} Queue to purge all messages from
      */
@@ -45,6 +51,18 @@ export interface ISQSHelper {
         visibilityTimeout?: number,
         attributeNames?: string[],
         messageAttributeNames?: string[]): Promise<AWS.SQS.ReceiveMessageResult>;
+
+    /**
+     * Receive all messages currently on a queue
+     * @param queueUrl {string} Queue to receive message from
+     * @param visibilityTimeout {number} Time in seconds that a message is hidden from the queue. Default is 10
+     * @param attributeNames {string[]} List of attribute names that need to be returned for each message. Default is 'ALL'
+     * @param messageAttributeNames {string[]} List of message attributes to be returned for each message
+     */
+    ReceiveAllMessagesAsync(queueUrl: string,
+        visibilityTimeout?: number,
+        attributeNames?: string[],
+        messageAttributeNames?: string[]): Promise<AWS.SQS.Message[]>;
 
     /**
      * Send a message to a queue
