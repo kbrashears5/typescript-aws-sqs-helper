@@ -1,6 +1,6 @@
 version: 2
 updates:
-  ### update non aws packages daily
+  ### update dependencies daily
   # package.json in root directory
   - package-ecosystem: "npm"
     directory: "/"
@@ -12,20 +12,20 @@ updates:
     # set reviewers
     reviewers:
       - "kbrashears5"
-    ignore:
-      - dependency: "aws*"
+  #   allow:
+  #     - dependency-type: "production"
         
-  ### update aws packages weekly
-  # package.json in root directory
-  - package-ecosystem: "npm"
-    directory: "/"
-    # weekly on monday at 5am UTC
-    schedule:
-      interval: "weekly"
-    # always get latest version
-    versioning-strategy: increase
-    # set reviewers
-    reviewers:
-      - "kbrashears5"
-    allow:
-      - dependency: "aws*"
+  # ### update dev dependencies weekly
+  # # package.json in root directory
+  # - package-ecosystem: "npm"
+  #   directory: "/"
+  #   # weekly on monday at 5am UTC
+  #   schedule:
+  #     interval: "weekly"
+  #   # always get latest version
+  #   versioning-strategy: increase
+  #   # set reviewers
+  #   reviewers:
+  #     - "kbrashears5"
+  #   allow:
+  #     - dependency-type: "development"
