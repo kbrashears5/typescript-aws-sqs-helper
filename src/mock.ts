@@ -9,6 +9,11 @@ const AWS = require('aws-sdk');
 export class SQSMock extends BaseMock {
 
     /**
+     * Mocks an AWS.SQS.CreateQueueResult response
+     */
+    public CreateQueueResult: AWS.SQS.CreateQueueResult = {};
+
+    /**
      * Mocks an AWS.SQS.DeleteMessageOutput response
      * Technically doesn't exist
      */
@@ -18,6 +23,12 @@ export class SQSMock extends BaseMock {
      * Mocks an AWS.SQS.DeleteMessageBatchResult response
      */
     public DeleteMessageBatchResult: AWS.SQS.DeleteMessageBatchResult = { Failed: [], Successful: [] };
+
+    /**
+     * Mocks an AWS.SQS.DeleteQueueResult response
+     * Technically doesn't exist
+     */
+    public DeleteQueueResult: object = {};
 
     /**
      * Mocks an AWS.SQS.DeleteMessageBatchResult response
@@ -53,6 +64,14 @@ export class SQSMock extends BaseMock {
 
         // implement the AWS responses
         const awsResponses = {
+            // create queue response
+            createQueue: {
+                promise: jest.fn().mockImplementation(() => {
+                    return returnError ?
+                        Promise.reject(rejectResponse) :
+                        Promise.resolve<AWS.SQS.CreateQueueResult>(this.CreateQueueResult);
+                }),
+            },
             // delete message response
             deleteMessage: {
                 promise: jest.fn().mockImplementation(() => {
@@ -67,6 +86,14 @@ export class SQSMock extends BaseMock {
                     return returnError ?
                         Promise.reject(rejectResponse) :
                         Promise.resolve<AWS.SQS.DeleteMessageBatchResult>(this.DeleteMessageBatchResult);
+                }),
+            },
+            // delete queue response
+            deleteQueue: {
+                promise: jest.fn().mockImplementation(() => {
+                    return returnError ?
+                        Promise.reject(rejectResponse) :
+                        Promise.resolve<{}>(this.DeleteQueueResult);
                 }),
             },
             // get queue attributes response
@@ -114,8 +141,10 @@ export class SQSMock extends BaseMock {
         // create the functions
         let functions = new AWS.SQS();
         functions = {
+            createQueue: () => awsResponses.createQueue,
             deleteMessage: () => awsResponses.deleteMessage,
             deleteMessageBatch: () => awsResponses.deleteMessageBatch,
+            deleteQueue: () => awsResponses.deleteQueue,
             getQueueAttributes: () => awsResponses.getQueueAttributes,
             purgeQueue: () => awsResponses.purgeQueue,
             receiveMessage: () => awsResponses.receiveMessage,
