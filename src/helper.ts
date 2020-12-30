@@ -12,7 +12,7 @@ export class SQSHelper extends BaseClass implements ISQSHelper {
     /**
      * AWS Repository for SQS
      */
-    public Repository: SQS.SQS;
+    private Repository: SQS.SQS;
 
     /**
      * Initializes new instance of SQSHelper

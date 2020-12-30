@@ -5,12 +5,6 @@ import { Attributes, AttributeValues } from './any';
  * Functions to interact with the AWS SQS service
  */
 export interface ISQSHelper {
-
-    /**
-     * AWS Repository for SQS
-     */
-    Repository: SQS.SQS;
-
     /**
      * Create queue
      * @param queueName {string} URL of queue
