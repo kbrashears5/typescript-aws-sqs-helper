@@ -46,3 +46,6 @@ const helper = new SQSHelper(logger,
 const response = await helper.DeleteMessageAsync('queueUrl',
     'receiptHandle');
 ```
+
+## Notes
+If no options are supplied, will default to `us-east-1` as the region
