@@ -1,22 +1,17 @@
-import * as AWS from 'aws-sdk';
+import * as SQS from '@aws-sdk/client-sqs';
+import { Attributes, AttributeValues } from './any';
 
 /**
  * Functions to interact with the AWS SQS service
  */
 export interface ISQSHelper {
-
-    /**
-     * AWS Repository for SQS
-     */
-    Repository: AWS.SQS;
-
     /**
      * Create queue
      * @param queueName {string} URL of queue
-     * @param attributes {AWS.SQS.QueueAttributeMap} Attributes to give the queue
+     * @param attributes {Attributes} Attributes to give the queue
      */
     CreateQueueAsync(queueName: string,
-        attributes: AWS.SQS.QueueAttributeMap): Promise<AWS.SQS.CreateQueueResult>;
+        attributes: Attributes): Promise<SQS.CreateQueueResult>;
 
     /**
      * Delete message from a queue
@@ -32,7 +27,7 @@ export interface ISQSHelper {
      * @param receiptHandles {string[]} String array of receipt handle of messages to delete
      */
     DeleteMessagesAsync(queueUrl: string,
-        receiptHandles: string[]): Promise<AWS.SQS.DeleteMessageBatchResult>;
+        receiptHandles: string[]): Promise<SQS.DeleteMessageBatchResult>;
 
     /**
      * Delete queue
@@ -50,7 +45,7 @@ export interface ISQSHelper {
      * Get queue attributes
      * @param queueUrl {string} URL of queue
      */
-    GetQueueAttributesAsync(queueUrl: string): Promise<AWS.SQS.QueueAttributeMap>;
+    GetQueueAttributesAsync(queueUrl: string): Promise<Attributes>;
 
     /**
      * Purge all messages on a queue
@@ -68,7 +63,7 @@ export interface ISQSHelper {
     ReceiveAllMessagesAsync(queueUrl: string,
         visibilityTimeout?: number,
         attributeNames?: string[],
-        messageAttributeNames?: string[]): Promise<AWS.SQS.Message[]>;
+        messageAttributeNames?: string[]): Promise<SQS.Message[]>;
 
     /**
      * Receive messages from a queue
@@ -82,25 +77,25 @@ export interface ISQSHelper {
         maxNumberOfMessages?: number,
         visibilityTimeout?: number,
         attributeNames?: string[],
-        messageAttributeNames?: string[]): Promise<AWS.SQS.ReceiveMessageResult>;
+        messageAttributeNames?: string[]): Promise<SQS.ReceiveMessageResult>;
 
     /**
      * Send message to a queue
      * @param queueUrl {string} URL of queue
      * @param messageBody {string} Body of message
      * @param delaySeconds {number} How long to delay sending message. Default is 0
-     * @param messageAttributes {AWS.SQS.MessageBodyAttributeMap} Attributes to send with the message
+     * @param messageAttributes {SQS.MessageBodyAttributeMap} Attributes to send with the message
      */
     SendMessageAsync(queueUrl: string,
         messageBody: string,
         delaySeconds?: number,
-        messageAttributes?: AWS.SQS.MessageBodyAttributeMap): Promise<AWS.SQS.SendMessageResult>;
+        messageAttributes?: AttributeValues): Promise<SQS.SendMessageResult>;
 
     /**
      * Send messages to a queue
      * @param queueUrl {string} URL of queue
-     * @param messages {AWS.SQS.SendMessageBatchRequestEntry[]} Messages
+     * @param messages {SQS.SendMessageBatchRequestEntry[]} Messages
      */
     SendMessagesAsync(queueUrl: string,
-        messages: AWS.SQS.SendMessageBatchRequestEntry[]): Promise<AWS.SQS.SendMessageBatchResult>;
+        messages: SQS.SendMessageBatchRequestEntry[]): Promise<SQS.SendMessageBatchResult>;
 }

@@ -1,3 +1,5 @@
+import * as SQS from '@aws-sdk/client-sqs';
+
 /**
  * Test values
  */
@@ -21,5 +23,5 @@ export class TestingValues {
     public Url: string = 'url';
 
     // objects
-    public Entries: AWS.SQS.SendMessageBatchRequestEntry[] = [{ Id: this.StringValue, MessageBody: this.Body }];
+    public Entries: SQS.SendMessageBatchRequestEntry[] = [{ Id: this.StringValue, MessageBody: this.Body }];
 }

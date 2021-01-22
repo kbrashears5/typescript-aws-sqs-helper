@@ -1,7 +1,8 @@
-import * as AWS from 'aws-sdk';
+import * as SQS from '@aws-sdk/client-sqs';
 import { ILogger } from 'typescript-ilogger';
 import { BaseClass } from 'typescript-helper-functions';
 import { ISQSHelper } from './interface';
+import { Attributes, AttributeValues } from './any';
 
 /**
  * SQS Helper
@@ -11,24 +12,25 @@ export class SQSHelper extends BaseClass implements ISQSHelper {
     /**
      * AWS Repository for SQS
      */
-    public Repository: AWS.SQS;
+    private Repository: SQS.SQS;
 
     /**
      * Initializes new instance of SQSHelper
      * @param logger {ILogger} Injected logger
-     * @param repository {AWS.SQS} Injected Repository. A new repository will be created if not supplied
-     * @param options {AWS.SQS.ClientConfiguration} Injected configuration if a Repository is supplied
+     * @param repository {SQS.SQS} Injected Repository. A new repository will be created if not supplied
+     * @param options {SQS.SQSClientConfig} Injected configuration if a Repository is supplied
      */
     constructor(logger: ILogger,
-        repository?: AWS.SQS,
-        options?: AWS.SQS.ClientConfiguration) {
+        repository?: SQS.SQS,
+        options?: SQS.SQSClientConfig) {
 
         super(logger);
-        this.Repository = repository || new AWS.SQS(options);
+        options = this.ObjectOperations.IsNullOrEmpty(options) ? { region: 'us-east-1' } as SQS.SQSClientConfig : options!;
+        this.Repository = repository || new SQS.SQS(options);
     }
 
     public async CreateQueueAsync(queueName: string,
-        attributes: AWS.SQS.QueueAttributeMap): Promise<AWS.SQS.CreateQueueResult> {
+        attributes: Attributes): Promise<SQS.CreateQueueResult> {
 
         const action = `${SQSHelper.name}.${this.CreateQueueAsync.name}`;
         this.LogHelper.LogInputs(action, { queueName, attributes });
@@ -37,14 +39,14 @@ export class SQSHelper extends BaseClass implements ISQSHelper {
         if (this.ObjectOperations.IsNullOrWhitespace(queueName)) { throw new Error(`[${action}]-Must supply queueName`); }
 
         // create params object
-        const params: AWS.SQS.CreateQueueRequest = {
+        const params: SQS.CreateQueueRequest = {
             Attributes: attributes,
             QueueName: queueName,
         };
         this.LogHelper.LogRequest(action, params);
 
         // make AWS call
-        const response = await this.Repository.createQueue(params).promise();
+        const response = await this.Repository.createQueue(params);
         this.LogHelper.LogResponse(action, response);
 
         return response;
@@ -61,21 +63,21 @@ export class SQSHelper extends BaseClass implements ISQSHelper {
         if (this.ObjectOperations.IsNullOrWhitespace(receiptHandle)) { throw new Error(`[${action}]-Must supply receiptHandle`); }
 
         // create params object
-        const params: AWS.SQS.DeleteMessageRequest = {
+        const params: SQS.DeleteMessageRequest = {
             QueueUrl: queueUrl,
             ReceiptHandle: receiptHandle,
         };
         this.LogHelper.LogRequest(action, params);
 
         // make AWS call
-        const response = await this.Repository.deleteMessage(params).promise();
+        const response = await this.Repository.deleteMessage(params);
         this.LogHelper.LogResponse(action, response);
 
         return response;
     }
 
     public async DeleteMessagesAsync(queueUrl: string,
-        receiptHandles: string[]): Promise<AWS.SQS.DeleteMessageBatchResult> {
+        receiptHandles: string[]): Promise<SQS.DeleteMessageBatchResult> {
 
         const action = `${SQSHelper.name}.${this.DeleteMessagesAsync.name}`;
         this.LogHelper.LogInputs(action, { queueUrl, receiptHandles });
@@ -86,20 +88,20 @@ export class SQSHelper extends BaseClass implements ISQSHelper {
         if (receiptHandles.length > 10) { throw new Error(`[${action}]-Can only supply up to 10 receiptHandles`); }
 
         // create entries to delete
-        const entries: AWS.SQS.DeleteMessageBatchRequestEntry[] = [];
+        const entries: SQS.DeleteMessageBatchRequestEntry[] = [];
         for (const handle of receiptHandles) {
             entries.push({ Id: handle, ReceiptHandle: handle });
         }
 
         // create params object
-        const params: AWS.SQS.DeleteMessageBatchRequest = {
+        const params: SQS.DeleteMessageBatchRequest = {
             Entries: entries,
             QueueUrl: queueUrl,
         };
         this.LogHelper.LogRequest(action, params);
 
         // make AWS call
-        const response = await this.Repository.deleteMessageBatch(params).promise();
+        const response = await this.Repository.deleteMessageBatch(params);
         this.LogHelper.LogResponse(action, response);
 
         return response;
@@ -114,13 +116,13 @@ export class SQSHelper extends BaseClass implements ISQSHelper {
         if (this.ObjectOperations.IsNullOrWhitespace(queueUrl)) { throw new Error(`[${action}]-Must supply queueUrl`); }
 
         // create params object
-        const params: AWS.SQS.DeleteQueueRequest = {
+        const params: SQS.DeleteQueueRequest = {
             QueueUrl: queueUrl,
         };
         this.LogHelper.LogRequest(action, params);
 
         // make AWS call
-        const response = await this.Repository.deleteQueue(params).promise();
+        const response = await this.Repository.deleteQueue(params);
         this.LogHelper.LogResponse(action, response);
 
         return response;
@@ -134,13 +136,13 @@ export class SQSHelper extends BaseClass implements ISQSHelper {
         // guard clauses
         if (this.ObjectOperations.IsNullOrWhitespace(queueUrl)) { throw new Error(`[${action}]-Must supply queueUrl`); }
 
-        const params: AWS.SQS.GetQueueAttributesRequest = {
+        const params: SQS.GetQueueAttributesRequest = {
             QueueUrl: queueUrl,
             AttributeNames: ['ApproximateNumberOfMessages'],
         };
         this.LogHelper.LogRequest(action, params);
 
-        const response = await this.Repository.getQueueAttributes(params).promise();
+        const response = await this.Repository.getQueueAttributes(params);
         this.LogHelper.LogResponse(action, response);
 
         let messages = '';
@@ -151,7 +153,7 @@ export class SQSHelper extends BaseClass implements ISQSHelper {
         return parseInt(messages, 10);
     }
 
-    public async GetQueueAttributesAsync(queueUrl: string): Promise<AWS.SQS.QueueAttributeMap> {
+    public async GetQueueAttributesAsync(queueUrl: string): Promise<Attributes> {
 
         const action = `${SQSHelper.name}.${this.GetQueueAttributesAsync.name}`;
         this.LogHelper.LogInputs(action, { queueUrl });
@@ -159,16 +161,16 @@ export class SQSHelper extends BaseClass implements ISQSHelper {
         // guard clauses
         if (this.ObjectOperations.IsNullOrWhitespace(queueUrl)) { throw new Error(`[${action}]-Must supply queueUrl`); }
 
-        const params: AWS.SQS.GetQueueAttributesRequest = {
+        const params: SQS.GetQueueAttributesRequest = {
             QueueUrl: queueUrl,
             AttributeNames: ['ALL'],
         };
         this.LogHelper.LogRequest(action, params);
 
-        const response = await this.Repository.getQueueAttributes(params).promise();
+        const response = await this.Repository.getQueueAttributes(params);
         this.LogHelper.LogResponse(action, response);
 
-        return response.Attributes || {} as AWS.SQS.QueueAttributeMap;
+        return response.Attributes || {} as Attributes;
     }
 
     public async PurgeQueueAsync(queueUrl: string): Promise<object> {
@@ -180,13 +182,13 @@ export class SQSHelper extends BaseClass implements ISQSHelper {
         if (this.ObjectOperations.IsNullOrWhitespace(queueUrl)) { throw new Error(`[${action}]-Must supply queueUrl`); }
 
         // create params object
-        const params: AWS.SQS.PurgeQueueRequest = {
+        const params: SQS.PurgeQueueRequest = {
             QueueUrl: queueUrl,
         };
         this.LogHelper.LogRequest(action, params);
 
         // make AWS call
-        const response = await this.Repository.purgeQueue(params).promise();
+        const response = await this.Repository.purgeQueue(params);
         this.LogHelper.LogResponse(action, response);
 
         return response;
@@ -195,9 +197,9 @@ export class SQSHelper extends BaseClass implements ISQSHelper {
     public async ReceiveAllMessagesAsync(queueUrl: string,
         visibilityTimeout?: number,
         attributeNames?: string[],
-        messageAttributeNames?: string[]): Promise<AWS.SQS.Message[]> {
+        messageAttributeNames?: string[]): Promise<SQS.Message[]> {
 
-        let allMessages: AWS.SQS.Message[] = [];
+        let allMessages: SQS.Message[] = [];
         while (true) {
             const messages = await this.ReceiveMessagesAsync(queueUrl, 10, visibilityTimeout, attributeNames, messageAttributeNames);
             if (!messages || !messages.Messages || messages.Messages.length < 1) { break; }
@@ -211,7 +213,7 @@ export class SQSHelper extends BaseClass implements ISQSHelper {
         maxNumberOfMessages?: number,
         visibilityTimeout?: number,
         attributeNames?: string[],
-        messageAttributeNames?: string[]): Promise<AWS.SQS.ReceiveMessageResult> {
+        messageAttributeNames?: string[]): Promise<SQS.ReceiveMessageResult> {
 
         const action = `${SQSHelper.name}.${this.ReceiveMessagesAsync.name}`;
         this.LogHelper.LogInputs(action, { queueUrl, maxNumberOfMessages, visibilityTimeout, attributeNames, messageAttributeNames });
@@ -225,7 +227,7 @@ export class SQSHelper extends BaseClass implements ISQSHelper {
         if (!attributeNames || attributeNames.length === 0) { attributeNames = ['ALL']; }
 
         // create params object
-        const params: AWS.SQS.ReceiveMessageRequest = {
+        const params: SQS.ReceiveMessageRequest = {
             AttributeNames: attributeNames,
             MaxNumberOfMessages: maxNumberOfMessages,
             MessageAttributeNames: messageAttributeNames,
@@ -235,7 +237,7 @@ export class SQSHelper extends BaseClass implements ISQSHelper {
         this.LogHelper.LogRequest(action, params);
 
         // make AWS call
-        const response = await this.Repository.receiveMessage(params).promise();
+        const response = await this.Repository.receiveMessage(params);
         this.LogHelper.LogResponse(action, response);
 
         return response;
@@ -244,7 +246,7 @@ export class SQSHelper extends BaseClass implements ISQSHelper {
     public async SendMessageAsync(queueUrl: string,
         messageBody: string,
         delaySeconds?: number,
-        messageAttributes?: AWS.SQS.MessageBodyAttributeMap): Promise<AWS.SQS.SendMessageResult> {
+        messageAttributes?: AttributeValues): Promise<SQS.SendMessageResult> {
 
         const action = `${SQSHelper.name}.${this.SendMessageAsync.name}`;
         this.LogHelper.LogInputs(action, { queueUrl, messageBody, delaySeconds, messageAttributes });
@@ -257,7 +259,7 @@ export class SQSHelper extends BaseClass implements ISQSHelper {
         if (!delaySeconds) { delaySeconds = 0; }
 
         // create params object
-        const params: AWS.SQS.SendMessageRequest = {
+        const params: SQS.SendMessageRequest = {
             DelaySeconds: delaySeconds,
             MessageAttributes: messageAttributes,
             MessageBody: messageBody,
@@ -266,14 +268,14 @@ export class SQSHelper extends BaseClass implements ISQSHelper {
         this.LogHelper.LogRequest(action, params);
 
         // make AWS call
-        const response = await this.Repository.sendMessage(params).promise();
+        const response = await this.Repository.sendMessage(params);
         this.LogHelper.LogResponse(action, response);
 
         return response;
     }
 
     public async SendMessagesAsync(queueUrl: string,
-        entries: AWS.SQS.SendMessageBatchRequestEntry[]): Promise<AWS.SQS.SendMessageBatchResult> {
+        entries: SQS.SendMessageBatchRequestEntry[]): Promise<SQS.SendMessageBatchResult> {
 
         const action = `${SQSHelper.name}.${this.SendMessagesAsync.name}`;
         this.LogHelper.LogInputs(action, { queueUrl });
@@ -283,14 +285,14 @@ export class SQSHelper extends BaseClass implements ISQSHelper {
         if (!entries || entries.length === 0) { throw new Error(`[${action}]-Must supply at least one entry`); }
 
         // create params object
-        const params: AWS.SQS.SendMessageBatchRequest = {
+        const params: SQS.SendMessageBatchRequest = {
             Entries: entries,
             QueueUrl: queueUrl,
         };
         this.LogHelper.LogRequest(action, params);
 
         // make AWS call
-        const response = await this.Repository.sendMessageBatch(params).promise();
+        const response = await this.Repository.sendMessageBatch(params);
         this.LogHelper.LogResponse(action, response);
 
         return response;
