@@ -34,15 +34,17 @@ const response = await helper.DeleteMessageAsync('queueUrl', 'receiptHandle');
 ### Running in separate account or not in Lambda
 
 ```typescript
+import * as SQS from '@aws-sdk/client-sqs';
+
 const logger = new Logger(LogLevel.Trace);
 
-const options: AWS.SQS.ClientConfiguration = {
+const options: SQS.SQSClientConfig = {
   accessKeyId: '{access_key}',
   secretAccessKey: '{secret_key}',
   region: 'us-east-1',
 };
 
-const repository = new AWS.SQS(options);
+const repository = new SQS.SQS(options);
 
 const helper = new SQSHelper(logger, repository);
 
