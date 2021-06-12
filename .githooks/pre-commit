@@ -1,4 +1,3 @@
-
 #!/bin/sh
 
 echo "Bumping package version"
