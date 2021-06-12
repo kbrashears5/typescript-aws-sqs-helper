@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import * as SQS from '@aws-sdk/client-sqs';
 import { Attributes, AttributeValues } from './any';
 
@@ -20,7 +21,7 @@ export interface ISQSHelper {
    * @param queueUrl {string} URL of queue
    * @param receiptHandle {string} Receipt handle of message to delete
    */
-  DeleteMessageAsync(queueUrl: string, receiptHandle: string): Promise<object>;
+  DeleteMessageAsync(queueUrl: string, receiptHandle: string): Promise<any>;
 
   /**
    * Delete messages from a queue
@@ -36,7 +37,7 @@ export interface ISQSHelper {
    * Delete queue
    * @param queueUrl {string} URL of queue
    */
-  DeleteQueueAsync(queueUrl: string): Promise<object>;
+  DeleteQueueAsync(queueUrl: string): Promise<any>;
 
   /**
    * Get number of messages on a queue
@@ -54,7 +55,7 @@ export interface ISQSHelper {
    * Purge all messages on a queue
    * @param queueUrl {string} URL of queue
    */
-  PurgeQueueAsync(queueUrl: string): Promise<object>;
+  PurgeQueueAsync(queueUrl: string): Promise<any>;
 
   /**
    * Receive all the messages on a queue

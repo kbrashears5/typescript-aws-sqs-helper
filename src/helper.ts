@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import * as SQS from '@aws-sdk/client-sqs';
 import { ILogger } from 'typescript-ilogger';
 import { BaseClass } from 'typescript-helper-functions';
@@ -14,6 +15,10 @@ export class SQSHelper extends BaseClass implements ISQSHelper {
   private Repository: SQS.SQS;
 
   /**
+   * SQS Client Config
+   */
+  private Options: SQS.SQSClientConfig;
+  /**
    * Initializes new instance of SQSHelper
    * @param logger {ILogger} Injected logger
    * @param repository {SQS.SQS} Injected Repository. A new repository will be created if not supplied
@@ -25,10 +30,11 @@ export class SQSHelper extends BaseClass implements ISQSHelper {
     options?: SQS.SQSClientConfig,
   ) {
     super(logger);
-    options = this.ObjectOperations.IsNullOrEmpty(options)
+    this.Options = this.ObjectOperations.IsNullOrEmpty(options)
       ? ({ region: 'us-east-1' } as SQS.SQSClientConfig)
-      : options!;
-    this.Repository = repository || new SQS.SQS(options);
+      : // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        options!;
+    this.Repository = repository || new SQS.SQS(this.Options);
   }
 
   public async CreateQueueAsync(
@@ -60,7 +66,7 @@ export class SQSHelper extends BaseClass implements ISQSHelper {
   public async DeleteMessageAsync(
     queueUrl: string,
     receiptHandle: string,
-  ): Promise<object> {
+  ): Promise<any> {
     const action = `${SQSHelper.name}.${this.DeleteMessageAsync.name}`;
     this.LogHelper.LogInputs(action, { queueUrl, receiptHandle });
 
@@ -124,7 +130,7 @@ export class SQSHelper extends BaseClass implements ISQSHelper {
     return response;
   }
 
-  public async DeleteQueueAsync(queueUrl: string): Promise<object> {
+  public async DeleteQueueAsync(queueUrl: string): Promise<any> {
     const action = `${SQSHelper.name}.${this.DeleteQueueAsync.name}`;
     this.LogHelper.LogInputs(action, { queueUrl });
 
@@ -168,7 +174,7 @@ export class SQSHelper extends BaseClass implements ISQSHelper {
 
     let messages = '';
     if (response && response.Attributes) {
-      messages = response.Attributes['ApproximateNumberOfMessages'];
+      messages = response.Attributes.ApproximateNumberOfMessages;
     }
 
     return parseInt(messages, 10);
@@ -195,7 +201,7 @@ export class SQSHelper extends BaseClass implements ISQSHelper {
     return response.Attributes || ({} as Attributes);
   }
 
-  public async PurgeQueueAsync(queueUrl: string): Promise<object> {
+  public async PurgeQueueAsync(queueUrl: string): Promise<any> {
     const action = `${SQSHelper.name}.${this.PurgeQueueAsync.name}`;
     this.LogHelper.LogInputs(action, { queueUrl });
 
@@ -224,7 +230,10 @@ export class SQSHelper extends BaseClass implements ISQSHelper {
     messageAttributeNames?: string[],
   ): Promise<SQS.Message[]> {
     let allMessages: SQS.Message[] = [];
+
+    // eslint-disable-next-line no-constant-condition
     while (true) {
+      // eslint-disable-next-line no-await-in-loop
       const messages = await this.ReceiveMessagesAsync(
         queueUrl,
         10,

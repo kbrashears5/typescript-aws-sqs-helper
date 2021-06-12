@@ -1,3 +1,15 @@
 {
-  "cSpell.words": ["ISQS", "cobertura", "ilogger", "postpublish", "prebuild"]
+  "cSpell.words": [
+    "Autobuild",
+    "ISQS",
+    "Parens",
+    "cobertura",
+    "codeql",
+    "eqeqeq",
+    "ilogger",
+    "martinbeentjes",
+    "paren",
+    "postpublish",
+    "prebuild"
+  ]
 }

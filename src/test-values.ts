@@ -5,25 +5,26 @@ import * as SQS from '@aws-sdk/client-sqs';
  */
 export class TestingValues {
   // descriptions
-  public AWSError: string = 'AWS Error';
-  public InvalidTest: string = 'returns error from AWS';
-  public MustSupply: string = 'Must supply';
-  public ThrowsOnEmpty: string = 'throws on empty';
-  public ThrowsOnTooMany: string = 'throws on too many';
-  public ValidTest: string = 'returns valid response from AWS';
+  public AWSError = 'AWS Error';
+  public InvalidTest = 'returns error from AWS';
+  public MustSupply = 'Must supply';
+  public ThrowsOnEmpty = 'throws on empty';
+  public ThrowsOnTooMany = 'throws on too many';
+  public ValidTest = 'returns valid response from AWS';
 
   // empty values
   public EmptyArray = [];
-  public EmptyString: string = '';
+  public EmptyString = '';
 
   // strings
-  public Body: string = 'body';
-  public StringValue: string = 'value';
-  public ReceiptHandle: string = 'receipt-handle';
-  public Url: string = 'url';
+  public Body = 'body';
+  public StringValue = 'value';
+  public ReceiptHandle = 'receipt-handle';
+  public Url = 'url';
 
   // objects
   public Entries: SQS.SendMessageBatchRequestEntry[] = [
+    // eslint-disable-next-line no-invalid-this
     { Id: this.StringValue, MessageBody: this.Body },
   ];
 }

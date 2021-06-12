@@ -59,7 +59,7 @@ const TestValues = new TestingValues();
  * Test the CreateQueueAsync method
  */
 describe(`${SQSHelper.name}.${sqsHelperMock.CreateQueueAsync.name}`, () => {
-  test(TestValues.InvalidTest, () => {
+  test(`${TestValues.InvalidTest}`, () => {
     const actual = sqsHelperMock.CreateQueueAsync(TestValues.Url, {});
     return expect(actual).rejects.toThrow(TestValues.AWSError);
   });
@@ -69,7 +69,7 @@ describe(`${SQSHelper.name}.${sqsHelperMock.CreateQueueAsync.name}`, () => {
  * Test the DeleteMessageAsync method
  */
 describe(`${SQSHelper.name}.${sqsHelperMock.DeleteMessageAsync.name}`, () => {
-  test(TestValues.InvalidTest, () => {
+  test(`${TestValues.InvalidTest}`, () => {
     const actual = sqsHelperMock.DeleteMessageAsync(
       TestValues.Url,
       TestValues.ReceiptHandle,
@@ -82,7 +82,7 @@ describe(`${SQSHelper.name}.${sqsHelperMock.DeleteMessageAsync.name}`, () => {
  * Test the DeleteMessagesAsync method
  */
 describe(`${SQSHelper.name}.${sqsHelperMock.DeleteMessagesAsync.name}`, () => {
-  test(TestValues.InvalidTest, () => {
+  test(`${TestValues.InvalidTest}`, () => {
     const actual = sqsHelperMock.DeleteMessagesAsync(TestValues.Url, [
       TestValues.ReceiptHandle,
     ]);
@@ -94,7 +94,7 @@ describe(`${SQSHelper.name}.${sqsHelperMock.DeleteMessagesAsync.name}`, () => {
  * Test the DeleteQueueAsync method
  */
 describe(`${SQSHelper.name}.${sqsHelperMock.DeleteQueueAsync.name}`, () => {
-  test(TestValues.InvalidTest, () => {
+  test(`${TestValues.InvalidTest}`, () => {
     const actual = sqsHelperMock.DeleteQueueAsync(TestValues.Url);
     return expect(actual).rejects.toThrow(TestValues.AWSError);
   });
@@ -104,7 +104,7 @@ describe(`${SQSHelper.name}.${sqsHelperMock.DeleteQueueAsync.name}`, () => {
  * Test the GetNumberOfMessagesOnQueueAsync method
  */
 describe(`${SQSHelper.name}.${sqsHelperMock.GetNumberOfMessagesOnQueueAsync.name}`, () => {
-  test(TestValues.InvalidTest, () => {
+  test(`${TestValues.InvalidTest}`, () => {
     const actual = sqsHelperMock.GetNumberOfMessagesOnQueueAsync(
       TestValues.Url,
     );
@@ -116,7 +116,7 @@ describe(`${SQSHelper.name}.${sqsHelperMock.GetNumberOfMessagesOnQueueAsync.name
  * Test the GetQueueAttributesAsync method
  */
 describe(`${SQSHelper.name}.${sqsHelperMock.GetQueueAttributesAsync.name}`, () => {
-  test(TestValues.InvalidTest, () => {
+  test(`${TestValues.InvalidTest}`, () => {
     const actual = sqsHelperMock.GetQueueAttributesAsync(TestValues.Url);
     return expect(actual).rejects.toThrow(TestValues.AWSError);
   });
@@ -126,7 +126,7 @@ describe(`${SQSHelper.name}.${sqsHelperMock.GetQueueAttributesAsync.name}`, () =
  * Test the PurgeQueueAsync method
  */
 describe(`${SQSHelper.name}.${sqsHelperMock.PurgeQueueAsync.name}`, () => {
-  test(TestValues.InvalidTest, () => {
+  test(`${TestValues.InvalidTest}`, () => {
     const actual = sqsHelperMock.PurgeQueueAsync(TestValues.Url);
     return expect(actual).rejects.toThrow(TestValues.AWSError);
   });
@@ -136,7 +136,7 @@ describe(`${SQSHelper.name}.${sqsHelperMock.PurgeQueueAsync.name}`, () => {
  * Test the ReceiveMessagesAsync method
  */
 describe(`${SQSHelper.name}.${sqsHelperMock.ReceiveMessagesAsync.name}`, () => {
-  test(TestValues.InvalidTest, () => {
+  test(`${TestValues.InvalidTest}`, () => {
     const actual = sqsHelperMock.ReceiveMessagesAsync(TestValues.Url);
     return expect(actual).rejects.toThrow(TestValues.AWSError);
   });
@@ -146,7 +146,7 @@ describe(`${SQSHelper.name}.${sqsHelperMock.ReceiveMessagesAsync.name}`, () => {
  * Test the SendMessageAsync method
  */
 describe(`${SQSHelper.name}.${sqsHelperMock.SendMessageAsync.name}`, () => {
-  test(TestValues.InvalidTest, () => {
+  test(`${TestValues.InvalidTest}`, () => {
     const actual = sqsHelperMock.SendMessageAsync(
       TestValues.Url,
       TestValues.Body,
@@ -159,7 +159,7 @@ describe(`${SQSHelper.name}.${sqsHelperMock.SendMessageAsync.name}`, () => {
  * Test the SendMessagesAsync method
  */
 describe(`${SQSHelper.name}.${sqsHelperMock.SendMessagesAsync.name}`, () => {
-  test(TestValues.InvalidTest, () => {
+  test(`${TestValues.InvalidTest}`, () => {
     const actual = sqsHelperMock.SendMessagesAsync(
       TestValues.Url,
       TestValues.Entries,

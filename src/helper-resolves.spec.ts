@@ -4,16 +4,16 @@ import { SQSHelper } from './helper';
 import * as SQS from '@aws-sdk/client-sqs';
 
 const createQueueResultResponse: SQS.CreateQueueResult = {};
-const deleteMessageOutputResponse: object = { Failed: [], Successful: [] };
+const deleteMessageOutputResponse = { Failed: [], Successful: [] };
 const deleteMessageBatchResultResponse: SQS.DeleteMessageBatchResult = {
   Failed: [],
   Successful: [],
 };
-const deleteQueueResultResponse: object = {};
+const deleteQueueResultResponse = {};
 const getQueueAttributesResultResponse: SQS.GetQueueAttributesResult = {
   Attributes: { ApproximateNumberOfMessages: '5' },
 };
-const purgeQueueResultResponse: object = {};
+const purgeQueueResultResponse = {};
 const receiveMessageResultResponse: SQS.ReceiveMessageResult = { Messages: [] };
 const sendMessageResultResponse: SQS.SendMessageResult = {};
 const sendMessageBatchResultResponse: SQS.SendMessageBatchResult = {
@@ -25,7 +25,7 @@ const createQueue = jest.fn().mockImplementation(() => {
   return Promise.resolve<SQS.CreateQueueResult>(createQueueResultResponse);
 });
 const deleteMessage = jest.fn().mockImplementation(() => {
-  return Promise.resolve<{}>(deleteMessageOutputResponse);
+  return Promise.resolve<any>(deleteMessageOutputResponse);
 });
 const deleteMessageBatch = jest.fn().mockImplementation(() => {
   return Promise.resolve<SQS.DeleteMessageBatchResult>(
@@ -33,7 +33,7 @@ const deleteMessageBatch = jest.fn().mockImplementation(() => {
   );
 });
 const deleteQueue = jest.fn().mockImplementation(() => {
-  return Promise.resolve<{}>(deleteQueueResultResponse);
+  return Promise.resolve<any>(deleteQueueResultResponse);
 });
 const getQueueAttributes = jest.fn().mockImplementation(() => {
   return Promise.resolve<SQS.GetQueueAttributesResult>(
@@ -41,7 +41,7 @@ const getQueueAttributes = jest.fn().mockImplementation(() => {
   );
 });
 const purgeQueue = jest.fn().mockImplementation(() => {
-  return Promise.resolve<{}>(purgeQueueResultResponse);
+  return Promise.resolve<any>(purgeQueueResultResponse);
 });
 const receiveMessage = jest.fn().mockImplementation(() => {
   return Promise.resolve<SQS.ReceiveMessageResult>(
@@ -93,7 +93,7 @@ describe(`${SQSHelper.name}.${sqsHelperMock.CreateQueueAsync.name}`, () => {
       `[${action}]-${TestValues.MustSupply} queueName`,
     );
   });
-  test(TestValues.ValidTest, () => {
+  test(`${TestValues.ValidTest}`, () => {
     const actual = sqsHelperMock.CreateQueueAsync(TestValues.Url, {});
     return expect(actual).resolves.toEqual(createQueueResultResponse);
   });
@@ -124,7 +124,7 @@ describe(`${SQSHelper.name}.${sqsHelperMock.DeleteMessageAsync.name}`, () => {
       `[${action}]-${TestValues.MustSupply} receiptHandle`,
     );
   });
-  test(TestValues.ValidTest, () => {
+  test(`${TestValues.ValidTest}`, () => {
     const actual = sqsHelperMock.DeleteMessageAsync(
       TestValues.Url,
       TestValues.ReceiptHandle,
@@ -175,7 +175,7 @@ describe(`${SQSHelper.name}.${sqsHelperMock.DeleteMessagesAsync.name}`, () => {
       `[${action}]-Can only supply up to 10 receiptHandles`,
     );
   });
-  test(TestValues.ValidTest, () => {
+  test(`${TestValues.ValidTest}`, () => {
     const actual = sqsHelperMock.DeleteMessagesAsync(TestValues.Url, [
       TestValues.ReceiptHandle,
     ]);
@@ -196,7 +196,7 @@ describe(`${SQSHelper.name}.${sqsHelperMock.DeleteQueueAsync.name}`, () => {
       `[${action}]-${TestValues.MustSupply} queueUrl`,
     );
   });
-  test(TestValues.ValidTest, () => {
+  test(`${TestValues.ValidTest}`, () => {
     const actual = sqsHelperMock.DeleteQueueAsync(TestValues.Url);
     return expect(actual).resolves.toEqual(deleteQueueResultResponse);
   });
@@ -217,7 +217,7 @@ describe(`${SQSHelper.name}.${sqsHelperMock.GetNumberOfMessagesOnQueueAsync.name
       `[${action}]-${TestValues.MustSupply} queueUrl`,
     );
   });
-  test(TestValues.ValidTest, () => {
+  test(`${TestValues.ValidTest}`, () => {
     const actual = sqsHelperMock.GetNumberOfMessagesOnQueueAsync(
       TestValues.Url,
     );
@@ -240,7 +240,7 @@ describe(`${SQSHelper.name}.${sqsHelperMock.GetQueueAttributesAsync.name}`, () =
       `[${action}]-${TestValues.MustSupply} queueUrl`,
     );
   });
-  test(TestValues.ValidTest, () => {
+  test(`${TestValues.ValidTest}`, () => {
     const actual = sqsHelperMock.GetQueueAttributesAsync(TestValues.Url);
     return expect(actual).resolves.toBe(
       getQueueAttributesResultResponse.Attributes,
@@ -261,7 +261,7 @@ describe(`${SQSHelper.name}.${sqsHelperMock.PurgeQueueAsync.name}`, () => {
       `[${action}]-${TestValues.MustSupply} queueUrl`,
     );
   });
-  test(TestValues.ValidTest, () => {
+  test(`${TestValues.ValidTest}`, () => {
     const actual = sqsHelperMock.PurgeQueueAsync(TestValues.Url);
     return expect(actual).resolves.toEqual(purgeQueueResultResponse);
   });
@@ -280,7 +280,7 @@ describe(`${SQSHelper.name}.${sqsHelperMock.ReceiveMessagesAsync.name}`, () => {
       `[${action}]-${TestValues.MustSupply} queueUrl`,
     );
   });
-  test(TestValues.ValidTest, () => {
+  test(`${TestValues.ValidTest}`, () => {
     const actual = sqsHelperMock.ReceiveMessagesAsync(TestValues.Url);
     return expect(actual).resolves.toEqual(receiveMessageResultResponse);
   });
@@ -311,7 +311,7 @@ describe(`${SQSHelper.name}.${sqsHelperMock.SendMessageAsync.name}`, () => {
       `[${action}]-${TestValues.MustSupply} messageBody`,
     );
   });
-  test(TestValues.ValidTest, () => {
+  test(`${TestValues.ValidTest}`, () => {
     const actual = sqsHelperMock.SendMessageAsync(
       TestValues.Url,
       TestValues.Body,
@@ -345,7 +345,7 @@ describe(`${SQSHelper.name}.${sqsHelperMock.SendMessagesAsync.name}`, () => {
       `[${action}]-${TestValues.MustSupply} at least one entry`,
     );
   });
-  test(TestValues.ValidTest, () => {
+  test(`${TestValues.ValidTest}`, () => {
     const actual = sqsHelperMock.SendMessagesAsync(
       TestValues.Url,
       TestValues.Entries,

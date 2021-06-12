@@ -4,9 +4,7 @@
     
 <b>Typescript helper functions for AWS SQS service</b>
     
-[![Build Status](https://dev.azure.com/kbrashears5/github/_apis/build/status/kbrashears5.typescript-aws-sqs-helper?branchName=master)](https://dev.azure.com/kbrashears5/github/_build/latest?definitionId=11&branchName=master)
-[![Tests](https://img.shields.io/azure-devops/tests/kbrashears5/github/11)](https://img.shields.io/azure-devops/tests/kbrashears5/github/11)
-[![Code Coverage](https://img.shields.io/azure-devops/coverage/kbrashears5/github/11)](https://img.shields.io/azure-devops/coverage/kbrashears5/github/11)
+[![CI/CD](https://github.com/kbrashears5/typescript-aws-sqs-helper/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/kbrashears5/typescript-aws-sqs-helper/actions/workflows/ci-cd.yml)
 
 [![NPM Version](https://img.shields.io/npm/v/typescript-aws-sqs-helper)](https://img.shields.io/npm/v/typescript-aws-sqs-helper)
 [![Downloads](https://img.shields.io/npm/dt/typescript-aws-sqs-helper)](https://img.shields.io/npm/dt/typescript-aws-sqs-helper)
@@ -54,3 +52,13 @@ const response = await helper.DeleteMessageAsync('queueUrl', 'receiptHandle');
 ## Notes
 
 If no options are supplied, will default to `us-east-1` as the region
+
+## Development
+
+Clone the latest and run
+
+```npm
+npm run prep
+```
+
+to install packages and prep the git hooks
