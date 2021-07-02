@@ -5,7 +5,7 @@
 <b>Typescript helper functions for AWS SQS service</b>
     
 [![CI/CD](https://github.com/kbrashears5/typescript-aws-sqs-helper/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/kbrashears5/typescript-aws-sqs-helper/actions/workflows/ci-cd.yml)
-
+[![codecov](https://codecov.io/gh/kbrashears5/typescript-aws-sqs-helper/branch/master/graph/badge.svg?token=KA021SKDXO)](https://codecov.io/gh/kbrashears5/typescript-aws-sqs-helper)
 [![NPM Version](https://img.shields.io/npm/v/typescript-aws-sqs-helper)](https://img.shields.io/npm/v/typescript-aws-sqs-helper)
 [![Downloads](https://img.shields.io/npm/dt/typescript-aws-sqs-helper)](https://img.shields.io/npm/dt/typescript-aws-sqs-helper)
 
