@@ -228,6 +228,7 @@ export class SQSHelper extends BaseClass implements ISQSHelper {
     visibilityTimeout?: number,
     attributeNames?: string[],
     messageAttributeNames?: string[],
+    waitTimeSeconds?: number,
   ): Promise<SQS.Message[]> {
     let allMessages: SQS.Message[] = [];
 
@@ -240,6 +241,7 @@ export class SQSHelper extends BaseClass implements ISQSHelper {
         visibilityTimeout,
         attributeNames,
         messageAttributeNames,
+        waitTimeSeconds,
       );
       if (!messages || !messages.Messages || messages.Messages.length < 1) {
         break;
@@ -256,6 +258,7 @@ export class SQSHelper extends BaseClass implements ISQSHelper {
     visibilityTimeout?: number,
     attributeNames?: string[],
     messageAttributeNames?: string[],
+    waitTimeSeconds?: number,
   ): Promise<SQS.ReceiveMessageResult> {
     const action = `${SQSHelper.name}.${this.ReceiveMessagesAsync.name}`;
     this.LogHelper.LogInputs(action, {
@@ -264,6 +267,7 @@ export class SQSHelper extends BaseClass implements ISQSHelper {
       visibilityTimeout,
       attributeNames,
       messageAttributeNames,
+      waitTimeSeconds,
     });
 
     // guard clauses
@@ -281,6 +285,9 @@ export class SQSHelper extends BaseClass implements ISQSHelper {
     if (!attributeNames || attributeNames.length === 0) {
       attributeNames = ['ALL'];
     }
+    if (!waitTimeSeconds) {
+      waitTimeSeconds = 20;
+    }
 
     // create params object
     const params: SQS.ReceiveMessageRequest = {
@@ -289,6 +296,7 @@ export class SQSHelper extends BaseClass implements ISQSHelper {
       MessageAttributeNames: messageAttributeNames,
       QueueUrl: queueUrl,
       VisibilityTimeout: visibilityTimeout,
+      WaitTimeSeconds: waitTimeSeconds,
     };
     this.LogHelper.LogRequest(action, params);
 
