@@ -63,12 +63,14 @@ export interface ISQSHelper {
    * @param visibilityTimeout {number} Time in seconds that a message is hidden from the queue. Default is 10
    * @param attributeNames {string[]} List of attribute names that need to be returned for each message. Default is 'ALL'
    * @param messageAttributeNames {string[]} List of message attributes to be returned for each message
+   * @param waitTimeSeconds {number} Wait time, in seconds to wait for messages. Default is 20 (long polling). Set to 0 for short polling
    */
   ReceiveAllMessagesAsync(
     queueUrl: string,
     visibilityTimeout?: number,
     attributeNames?: string[],
     messageAttributeNames?: string[],
+    waitTimeSeconds?: number,
   ): Promise<SQS.Message[]>;
 
   /**
@@ -78,6 +80,7 @@ export interface ISQSHelper {
    * @param visibilityTimeout {number} Time in seconds that a message is hidden from the queue. Default is 10
    * @param attributeNames {string[]} List of attribute names that need to be returned for each message. Default is 'ALL'
    * @param messageAttributeNames {string[]} List of message attributes to be returned for each message
+   * @param waitTimeSeconds {number} Wait time, in seconds to wait for messages. Default is 20 (long polling). Set to 0 for short polling
    */
   ReceiveMessagesAsync(
     queueUrl: string,
@@ -85,6 +88,7 @@ export interface ISQSHelper {
     visibilityTimeout?: number,
     attributeNames?: string[],
     messageAttributeNames?: string[],
+    waitTimeSeconds?: number,
   ): Promise<SQS.ReceiveMessageResult>;
 
   /**

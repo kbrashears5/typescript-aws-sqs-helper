@@ -1,6 +1,6 @@
 {
   "name": "typescript-aws-sqs-helper",
-  "version": "2.0.42",
+  "version": "2.0.43",
   "description": "Typescript AWS SQS Helper",
   "repository": {
     "type": "git",
